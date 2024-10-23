@@ -168,38 +168,67 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
 
     @Override
     public int indexOf(T element) {
-        // TODO
-        return 0;
+        int index = -1;
+        Node<T> currNode = head;
+        for(int i = 0; i < size; i++) {
+            if (currNode.getElement().equals(element)) {
+                index = i;
+                break;
+            }
+            currNode = currNode.getNext();
+        }
+        if(index == -1) {
+            throw new NoSuchElementException();
+        } else {
+            return index;
+        }
     }
 
     @Override
     public T first() {
-        // TODO
-        return null;
+        if (size == 0) {
+            throw new NoSuchElementException();
+        } else {
+            return head.getElement();
+        }
     }
 
     @Override
     public T last() {
         // TODO
-        return null;
+        if (size == 0) {
+            throw new NoSuchElementException();
+        } else {
+            return tail.getElement();
+        }
     }
 
     @Override
     public boolean contains(T target) {
-        // TODO
-        return false;
+        boolean targetExists = false;
+        Node<T> currNode = head;
+        for (int i = 0; i < size; i++) {
+            if (currNode.getElement() == target) {
+                targetExists = true;
+                break;
+            }
+            currNode = currNode.getNext();
+        }
+        return targetExists;
     }
 
     @Override
     public boolean isEmpty() {
-        // TODO
-        return false;
+        if (size == 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
     public int size() {
-        // TODO
-        return 0;
+        return size;
     }
 
     @Override
