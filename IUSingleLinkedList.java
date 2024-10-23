@@ -208,7 +208,7 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
         boolean targetExists = false;
         Node<T> currNode = head;
         for (int i = 0; i < size; i++) {
-            if (currNode.getElement() == target) {
+            if (currNode.getElement().equals(target)) {
                 targetExists = true;
                 break;
             }
