@@ -26,7 +26,7 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
 
     @Override
     public void addToFront(T element) {
-        if (size == 0) {
+        if (size == 0) { // empty list
             Node<T> newNode = new Node<T>(element);
             head = newNode;
             tail = newNode;
@@ -44,26 +44,118 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
 
     @Override
     public void addToRear(T element) {
-        // TODO
-
+        //check list is empty
+        if (size == 0) {
+            Node<T> newNode = new Node<T>(element);
+            head = newNode;
+            tail = newNode;
+            size++;
+            modCount++;
+        } else {
+            Node<T> newNode = new Node<T>(element);
+            tail.setNext(newNode);
+            tail = newNode;
+            size++;
+            modCount++;
+        }
     }
 
     @Override
     public void add(T element) {
-        // TODO
-
+        // check list is empty
+        if (size == 0) {
+            Node<T> newNode = new Node<T>(element);
+            head = newNode;
+            tail = newNode;
+            size++;
+            modCount++;
+        } else {
+            Node<T> newNode = new Node<T>(element);
+            tail.setNext(newNode);
+            tail = newNode;
+            size++;
+            modCount++;
+        }
     }
 
     @Override
     public void addAfter(T element, T target) {
-        // TODO
+        //check for empty list
+        if (size == 0) {
+            throw new NoSuchElementException();
+        } else {
+            Node<T> currNode = head;
+            int currIndex = 0;
+            int targetIndex = -1;
+            Node<T> targetNode = null;
+            for(int i = 0; i < size; i++) {
+                if(currNode.getElement().equals(target)) {
+                    targetNode = currNode;
+                    targetIndex = currIndex;
+                    break;
+                } else {
+                    currNode = currNode.getNext();
+                    currIndex++;
+                }
+            }
 
+            if(targetIndex == -1) {
+                throw new NoSuchElementException();
+            } else if (targetIndex == (size - 1)) { // if target is tail
+                Node<T> newNode = new Node<T>(element);
+                tail.setNext(newNode);
+                tail = newNode;
+                size++;
+                modCount++;
+            } else {
+                Node<T> newNode = new Node<T>(element);
+                newNode.setNext(targetNode.getNext());
+                targetNode.setNext(newNode);
+                size++;
+                modCount++;
+            }
+        }
     }
 
     @Override
     public void add(int index, T element) {
-        // TODO
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException();
+        } else { 
+            if (size == 0) { // check for empty list
+                Node<T> newNode = new Node<T>(element);
+                head = newNode;
+                tail = newNode;
+                size++;
+                modCount++;
+            } else if (size > 0 && index == 0) { // check for adding at head
+                Node<T> newNode = new Node<T>(element);
+                newNode.setNext(head);
+                head = newNode;
+                size++;
+                modCount++;
+            } else if (index == (size - 1)) { // check for adding at tail
+                Node<T> newNode = new Node<T>(element);
+                tail.setNext(newNode);
+                tail = newNode;
+                size++;
+                modCount++;
+            } else {
+                Node<T> targetNode = head;
+                Node<T> currNode = head;
 
+                for(int i = 0; i < index; i++) {
+                    targetNode = currNode;
+                    currNode = currNode.getNext();
+                }
+
+                Node<T> newNode = new Node<T>(element);
+                newNode.setNext(targetNode.getNext()); // target node is before new node
+                targetNode.setNext(newNode);
+                size++;
+                modCount++;
+            }
+        }
     }
 
     @Override
