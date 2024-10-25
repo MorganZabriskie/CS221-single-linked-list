@@ -160,14 +160,32 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
 
     @Override
     public T removeFirst() {
-        // TODO
-        return null;
+        if (size == 0) {
+            throw new NoSuchElementException();
+        } else {
+            Node<T> returnNode = head;
+            head = returnNode.getNext();
+            size--;
+            modCount++;
+            return returnNode.getElement();
+        }
     }
 
     @Override
     public T removeLast() {
-        // TODO
-        return null;
+        if (size == 0) {
+            throw new NoSuchElementException();
+        } else {
+            Node<T> returnNode = tail;
+            Node<T> beforeTail = head;
+            for (int i = 0; i < (size - 2); i++) {
+                beforeTail = beforeTail.getNext();
+            }
+            tail = beforeTail;
+            size--;
+            modCount++;
+            return returnNode.getElement();
+        }
     }
 
     @Override
@@ -213,6 +231,32 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
     @Override
     public T remove(int index) {
         // TODO
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        } else if (index == 0) { // if removing head
+            head.setNext(null);
+            head = head.getNext();
+            size--;
+            modCount++;
+        } else if (index == (size - 1)) {
+            Node<T> currNode = head;
+            Node<T> targetNode = head;
+            for (int i = 0; i <= index; i++) {
+                targetNode = currNode;
+                currNode = currNode.getNext();
+            }
+        }
+        else {
+            Node<T> currNode = head;
+            Node<T> targetNode = head;
+            for(int i = 0; i <= index; i++) {
+                targetNode = currNode;
+                currNode = currNode.getNext();
+            }
+            targetNode.setNext(targetNode.getNext().getNext());
+            size--;
+            modCount++;
+        }
         return null;
     }
 
