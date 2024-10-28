@@ -376,9 +376,9 @@ import java.util.NoSuchElementException;
     private class ArrayIterator<E extends T> implements Iterator<T> {
 
         // instance variables
-        boolean nextCalled = false;
-        int index = -1;
-        int iterModCount;
+        private boolean nextCalled = false;
+        private int index = -1;
+        private int iterModCount;
 
         public ArrayIterator() {
             this.iterModCount = modCount;
