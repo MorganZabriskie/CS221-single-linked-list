@@ -230,11 +230,11 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
 
     @Override
     public T remove(int index) {
-        // TODO
+        T returnElement = null;
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         } else if (index == 0) { // if removing head
-            head.setNext(null);
+            returnElement = head.getElement();
             head = head.getNext();
             if (size == 1) { // check for 1 element list
                 tail = head;
@@ -248,14 +248,18 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
                 targetNode = currNode;
                 currNode = currNode.getNext();
             }
-            targetNode.setNext(targetNode.getNext().getNext());
+            returnElement = targetNode.getElement();
+            
             if (currNode == tail) { // check if tail needs to be updated
+                targetNode.setNext(null);
                 tail = targetNode;
+            } else {
+                targetNode.setNext(currNode.getNext());
             }
             size--;
             modCount++;
         }
-        return null;
+        return returnElement;
     }
 
     @Override
@@ -363,6 +367,27 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
     @Override
     public int size() {
         return size;
+    }
+
+    @Override
+    public String toString() {
+        Node<T> currNode = head;
+        if (size == 0) {
+            String returnVal = "[ ]";
+            return returnVal;
+        } else {
+            String returnVal = "[";
+            for (int i = 0; i < size; i++) {
+                if (i == (size - 1)) {
+                    returnVal += currNode.getElement() + "]";
+                } else {
+                    returnVal += currNode.getElement() + ", ";
+                    currNode = currNode.getNext();
+                }
+            }
+
+            return returnVal;
+        }
     }
 
     @Override
