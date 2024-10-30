@@ -245,15 +245,15 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
         } else {
             Node<T> currNode = head;
             Node<T> targetNode = head;
-            for(int i = 0; i <= index; i++) {
+            for(int i = 0; i < index; i++) {
                 targetNode = currNode;
                 currNode = currNode.getNext();
             }
-            returnElement = targetNode.getElement();
+            returnElement = currNode.getElement(); //check if this should be target node or current node
             
             if (currNode == tail) { // check if tail needs to be updated
-                targetNode.setNext(null);
-                tail = targetNode;
+                currNode.setNext(null);
+                tail = currNode;
             } else {
                 targetNode.setNext(currNode.getNext());
             }
