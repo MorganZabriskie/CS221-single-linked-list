@@ -316,11 +316,7 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
             }
             currNode = currNode.getNext();
         }
-        if(index == -1) {
-            throw new NoSuchElementException();
-        } else {
             return index;
-        }
     }
 
     @Override
