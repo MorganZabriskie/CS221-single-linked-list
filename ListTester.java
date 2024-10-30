@@ -387,7 +387,6 @@ public class ListTester {
 		list.add(1, ELEMENT_B);
 		return list;
 	}
-
 	private Scenario<Integer> A_add1B_AB = () -> A_add1B_AB();
 
 	/**

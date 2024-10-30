@@ -135,7 +135,7 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
                 head = newNode;
                 size++;
                 modCount++;
-            } else if (index == (size - 1)) { // check for adding at tail
+            } else if (index == size) { // check for adding at tail
                 Node<T> newNode = new Node<T>(element);
                 tail.setNext(newNode);
                 tail = newNode;
@@ -151,7 +151,7 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
                 }
 
                 Node<T> newNode = new Node<T>(element);
-                newNode.setNext(targetNode.getNext()); // target node is before new node
+                newNode.setNext(currNode); // target node is before new node
                 targetNode.setNext(newNode);
                 size++;
                 modCount++;
@@ -177,15 +177,19 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
         if (size == 0) {
             throw new NoSuchElementException();
         } else {
-            Node<T> returnNode = tail;
-            Node<T> beforeTail = head;
-            for (int i = 0; i < (size - 2); i++) {
-                beforeTail = beforeTail.getNext();
+            Node<T> targetNode = head;
+            Node<T> currNode = head;
+
+            for (int i = 0; i < (size - 1); i++) {
+                targetNode = currNode;
+                currNode = currNode.getNext();
             }
-            tail = beforeTail;
+            T returnElement = currNode.getElement();
+            targetNode.setNext(null);
+            tail = targetNode;
             size--;
             modCount++;
-            return returnNode.getElement();
+            return returnElement;
         }
     }
 
@@ -252,8 +256,8 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
             returnElement = currNode.getElement(); //check if this should be target node or current node
             
             if (currNode == tail) { // check if tail needs to be updated
-                currNode.setNext(null);
-                tail = currNode;
+                targetNode.setNext(null);
+                tail = targetNode;
             } else {
                 targetNode.setNext(currNode.getNext());
             }
@@ -281,6 +285,7 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
             }
             currNode.setElement(element);
         }
+        modCount++;
     }
 
     @Override
@@ -409,6 +414,7 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
         private Node<T> nextNode;
         private Node<T> prevNode;
         private int iterModCount;
+        private int index = -1;
 
         /** Creates a new iterator for the list */
         public SLLIterator() {
@@ -418,15 +424,19 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
 
         @Override
         public boolean hasNext() {
+            boolean hasNext = false;
             if(modCount != iterModCount) {
                 throw new ConcurrentModificationException();
+            } else if (size == 0) {
+                hasNext = false;
+            } 
+            else if (nextNode == null) {
+                hasNext = false;
             } else {
-                boolean hasNext = false;
-                if(!nextNode.getElement().equals(null)) {
                     hasNext = true;
-                }
-                return hasNext;
             }
+                
+            return hasNext;
         }
 
         @Override
@@ -437,13 +447,15 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
                 T next = null;
                 if(size == 0 ) {
                     throw new NoSuchElementException();
-                } else if (prevNode == tail) {
+                } else if (!hasNext()) {
                     throw new NoSuchElementException();
-                } else {
+                }
+                else {
+                    next = nextNode.getElement();
                     prevNode = nextNode;
                     nextNode = nextNode.getNext();
-                    next = nextNode.getElement();
                     nextCalled = true;
+                    index++;
                     return next;
                 }
             }
@@ -458,24 +470,44 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
                 if(!nextCalled) {
                     throw new IllegalStateException();
                 } else {
-                    if(prevNode == head) {
-                        head = head.getNext();
-                        prevNode.setNext(null);
+                    if(size == 1) {
+                        head = null;
+                        tail = null;
                         size--;
                         iterModCount++;
                         modCount++;
+                        nextCalled = false;
+                    } else if(prevNode == head) {
+                        head = head.getNext();
+                        prevNode.setNext(null);
+                        prevNode = head;
+                        size--;
+                        iterModCount++;
+                        modCount++;
+                        nextCalled = false;
                     } else if (prevNode == tail) {
-                        //find node before prevNode
-                        //set that node 'next' to null
-                        //set tail to that node
-                        //size--
-                        //modcounts++
+                        Node<T> targetNode = head;
+                        for(int i = 1; i < (size - 1); i++) {
+                            targetNode = targetNode.getNext();
+                        }
+                        targetNode.setNext(null);
+                        tail = targetNode;
+                        size--;
+                        modCount++;
+                        iterModCount++;
+                        nextCalled = false;
                     } else {
-                        // find node before prevNode
-                        // set that node 'next' to currNode
-                        // set previous node 'next' to null
-                        // size--
-                        // modcounts++
+                        Node<T> targetNode = head;
+                        for (int i = 1; i < index; i++) {
+                            targetNode = targetNode.getNext();
+                        }
+                        targetNode.setNext(prevNode.getNext());
+                        prevNode.setNext(null);
+                        size--;
+                        index--;
+                        modCount++;
+                        iterModCount++;
+                        nextCalled = false;
                     }
                 }
             }
