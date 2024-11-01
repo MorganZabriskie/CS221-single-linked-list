@@ -17,7 +17,8 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
     private int size;
     private int modCount;
 
-    /** TODO: make java doc
+    /** Constructor for the IUSingleLinkedList class
+     * Instantiates the head, tail, size, and modCount
      * Creates an empty list */
     public IUSingleLinkedList() {
         head = tail = null;
@@ -335,7 +336,6 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
 
     @Override
     public T last() {
-        // TODO
         if (size == 0) {
             throw new NoSuchElementException();
         } else {
@@ -463,7 +463,6 @@ public class IUSingleLinkedList<T> implements IndexedUnsortedList<T> {
 
         @Override
         public void remove() {
-            // TODO
             if(modCount != iterModCount) {
                 throw new ConcurrentModificationException();
             } else {
